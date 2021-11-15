@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class helloJPa {
     public static void main(String[] args) {
@@ -39,10 +40,23 @@ public class helloJPa {
         tx.begin(); // transaction 시작
 
         try {
+
+            Member2 member2 = new Member2();
+            member2.setUsername("memberA");
+            member2.setAge(25);
+
+            entityManager.persist(member2);
+
+            Member2 member22 = new Member2();
+            member22.setUsername("memberB");
+            member22.setAge(27);
+
+            entityManager.persist(member22);
+
             // Member 객체에 Id와 이름을 넣고 persist로 저장
             // member.setId(2L);
-            // member.setName("helloB");
-            // entityManager.persist(member);
+            // member.setName("helloB"); // 비영속(객체를 생성하고 세팅까지만 완료한 상태)
+            // entityManager.persist(member); // 영속(생성한 member 객체를 em에 넣어서 em 안에있는 영속성 context로 관리되는 상태
 
 
             // Member 테이블에서 id가 1인 데이터를 가지고 오는 메서드 : find()
@@ -59,12 +73,17 @@ public class helloJPa {
             // JPA로 테이블 내의 컬럼 수정하는 방법,
             // 1. find로 수정할 테이블의 데이터를 DTO 객체를 통해 가져온다.
             // 2. 해당 DTO 객체의 setXXX 메서드를 사용하면 자동으로 바뀐다.
-            Member findMember = entityManager.find(Member.class, 2L);
-            findMember.setName("helloJPA");
+            // Member findMember = entityManager.find(Member.class, 2L);
+            // findMember.setName("helloJPA");
 
+            // JSQL 맛보기 : JSQL은 테이블이 기준이 아니라 Entity를 기준으로 쿼리문을 작성한다. 아래의 코드를 보면
+            // Member 테이블이 아닌 Entity로 지정한 Member 클래스를 기준으로 컬렉션을 가져오는 것을 볼 수 있다.
+            // 이럴 경우 DB가 달라지더라도 DB에 종속되지않고 객체지향적으로 쿼리문을 날릴 수 있다는 장점이 있다.
+            // 참고로 setFirstResult, setMaxResults는 1부터 10번 행 까지의 데이터를 가져오라는 메서드이다.
+//            List<Member> resultList = entityManager.createQuery("select m from Member as m", Member.class)
+//                    .setFirstResult(1).setMaxResults(10).getResultList();
 
             tx.commit();
-
 
         } catch(Exception e) {
             tx.rollback();
