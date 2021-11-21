@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class helloJpa_relationship {
 
@@ -23,8 +24,12 @@ public class helloJpa_relationship {
 
             Member member = new Member();
             member.setUsername("member1");
-            member.setTeam(team);
+            member.setTeam(team); // member객체에 team 추가
             em.persist(member);
+
+            // 양방향 연관관계에서는 양 객체 모두 데이터를 집어넣어주는 것이 좋다.
+            // team.getMembers().add(member); // team 객체에 member 추가
+
 
 //            1차캐시에서 가져오지말고 바로 DB에 쿼리문 날려서 가져오는걸 확인하고 싶을 때 flush() 사용
 //            em.flush();
@@ -42,11 +47,23 @@ public class helloJpa_relationship {
 //            Long findTeamId = findMember.getTeamId();
 //            Team findTeam = em.find(Team.class, findTeamId);
 
+
+
+            em.flush();
+            em.clear();
+
+
+
             Member findMember = em.find(Member.class, member.getId());
             Team findTeam = findMember.getTeam();
 
-            System.out.println("findTeam = " + findTeam);
+            List<Member> members = findMember.getTeam().getMembers();
 
+            for(Member m : members) {
+                System.out.println("m.getUsername() = " + m.getUsername());
+            }
+
+            System.out.println("findTeam = " + findTeam);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

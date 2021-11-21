@@ -6,7 +6,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
 
-public class helloJPa {
+public class helloJpa {
     public static void main(String[] args) {
         /**
          * 1. HelloJPA - 애플리케이션 개발 : JPA의 동작원리를 알기 위해 Spring Data JPA를 사용하지 않고
@@ -52,7 +52,6 @@ public class helloJPa {
             member22.setAge(27);
 
             entityManager.persist(member22);
-
             // Member 객체에 Id와 이름을 넣고 persist로 저장
             // member.setId(2L);
             // member.setName("helloB"); // 비영속(객체를 생성하고 세팅까지만 완료한 상태)
